@@ -11,16 +11,43 @@ export default defineConfig({
     locale: 'he-IL',
     timezoneId: 'Asia/Jerusalem',
   },
-  webServer: {
-    command: 'npm run dev -- --host 127.0.0.1 --port 5173',
-    url: 'http://127.0.0.1:5173',
-    reuseExistingServer: true,
-  },
+  webServer: [
+    {
+      command: 'npm run dev -- --host 127.0.0.1 --port 5173',
+      url: 'http://127.0.0.1:5173',
+      reuseExistingServer: true,
+      env: {
+        VITE_SUPABASE_URL: '',
+        VITE_SUPABASE_ANON_KEY: '',
+      },
+    },
+    {
+      command: 'npm run dev -- --host 127.0.0.1 --port 5174',
+      url: 'http://127.0.0.1:5174',
+      reuseExistingServer: false,
+      env: {
+        VITE_SUPABASE_URL: 'http://127.0.0.1:9',
+        VITE_SUPABASE_ANON_KEY: 'playwright-anon-key',
+      },
+    },
+  ],
   projects: [
     {
       name: 'chromium',
+      testIgnore: /sign-in\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
+        baseURL: 'http://127.0.0.1:5173',
+        locale: 'he-IL',
+        timezoneId: 'Asia/Jerusalem',
+      },
+    },
+    {
+      name: 'sign-in',
+      testMatch: /sign-in\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://127.0.0.1:5174',
         locale: 'he-IL',
         timezoneId: 'Asia/Jerusalem',
       },

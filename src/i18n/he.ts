@@ -123,6 +123,20 @@ export const he = {
   locationLabel: 'מיקום',
   notesLabel: 'הערות',
   requiredMark: 'שדה חובה',
+  signInTitle: 'כניסה ללוח',
+  signInLead: 'הלוח המשותף פתוח רק לצוות מאושר.',
+  fieldEmail: 'אימייל',
+  fieldPassword: 'סיסמה',
+  signInSubmit: 'כניסה',
+  signInPending: 'נכנסים…',
+  authBad: 'האימייל או הסיסמה שגויים',
+  authDenied: 'החשבון הזה אינו מאושר',
+  authLater: 'יותר מדי ניסיונות. נסו שוב בעוד כמה דקות',
+  authUnavailable: 'לא הצלחנו להתחבר. נסו שוב',
+  signOut: 'יציאה',
+  saveFailed: 'השמירה נכשלה. נסו שוב',
+  authHelp: 'חשבון חדש נפתח על ידי מנהל הלוח.',
+  authRequired: 'יש להזין אימייל וסיסמה',
 } as const;
 
 export const ERROR_TEXT = {

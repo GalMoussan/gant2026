@@ -167,38 +167,44 @@ export function AddEventPage() {
     const additions = plan.upserts.filter((item) => !known.has(item.id));
     const updates = plan.upserts.filter((item) => known.has(item.id));
     void (async () => {
-      await addUserEvents(additions);
-      for (const item of updates) await updateUserEvent(item);
-      if (plan.removeIds.length > 0) await removeUserEvents(plan.removeIds);
-      skipSave.current = true;
-      clearStoredDraft();
-      const first = plan.upserts[0];
-      const month = first ? monthKeyOf(first.date) : null;
-      const inYear = Boolean(month && monthByKey(month));
-      if (!existing && first) {
-        const show = inYear
-          ? [{ label: he.toastShow, run: () => void navigate(`/?m=${month}&focus=${first.id}&pulse=${Date.now()}`) }]
-          : [];
-        showToast(he.toastAdded, [
-          ...show,
-          {
-            label: he.toastAnother,
-            run: () => void navigate(`/add?date=${effective.date}`, { state: { skipDraft: true, draft: { ...effective, title: '' } } }),
-          },
-          {
-            label: he.toastUndo,
-            run: () => {
-              void removeUserEvents(plan.upserts.map((item) => item.id));
-              dismissToast();
+      try {
+        await addUserEvents(additions);
+        for (const item of updates) await updateUserEvent(item);
+        if (plan.removeIds.length > 0) await removeUserEvents(plan.removeIds);
+        skipSave.current = true;
+        clearStoredDraft();
+        const first = plan.upserts[0];
+        const month = first ? monthKeyOf(first.date) : null;
+        const inYear = Boolean(month && monthByKey(month));
+        if (!existing && first) {
+          const show = inYear
+            ? [{ label: he.toastShow, run: () => void navigate(`/?m=${month}&focus=${first.id}&pulse=${Date.now()}`) }]
+            : [];
+          showToast(he.toastAdded, [
+            ...show,
+            {
+              label: he.toastAnother,
+              run: () => void navigate(`/add?date=${effective.date}`, { state: { skipDraft: true, draft: { ...effective, title: '' } } }),
             },
-          },
-        ]);
-      } else {
-        showToast(he.toastUpdated);
+            {
+              label: he.toastUndo,
+              run: () => {
+                void removeUserEvents(plan.upserts.map((item) => item.id))
+                  .then(() => dismissToast())
+                  .catch(() => showToast(he.saveFailed));
+              },
+            },
+          ]);
+        } else {
+          showToast(he.toastUpdated);
+        }
+        if (inYear && first) void navigate(`/?m=${month}&focus=${first.id}`);
+        else void navigate('/');
+      } catch {
+        showToast(he.saveFailed);
+      } finally {
+        saving.current = false;
       }
-      if (inYear && first) void navigate(`/?m=${month}&focus=${first.id}`);
-      else void navigate('/');
-      saving.current = false;
     })();
   };
 
@@ -454,10 +460,12 @@ export function AddEventPage() {
               <ConfirmDelete
                 label={he.deleteEvent}
                 onConfirm={() => {
-                  void removeUserEvents([existing.id]).then(() => {
-                    showToast(he.toastDeleted);
-                    void navigate('/');
-                  });
+                  void removeUserEvents([existing.id])
+                    .then(() => {
+                      showToast(he.toastDeleted);
+                      void navigate('/');
+                    })
+                    .catch(() => showToast(he.saveFailed));
                 }}
               />
             </div>

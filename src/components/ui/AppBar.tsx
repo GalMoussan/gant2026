@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { Link, useLocation } from 'react-router';
 import { he } from '../../i18n/he.ts';
 import { parseBackup } from '../../lib/events.ts';
+import { useSession } from '../../store/session.ts';
 import { useCalendar } from '../../store/useCalendar.ts';
 
 export function AppBar() {
@@ -11,6 +12,7 @@ export function AppBar() {
   const userEvents = useCalendar((state) => state.userEvents);
   const importUserEvents = useCalendar((state) => state.importUserEvents);
   const showToast = useCalendar((state) => state.showToast);
+  const session = useSession();
   const onAdd = location.pathname.startsWith('/add') || location.pathname.startsWith('/edit');
 
   const onExport = () => {
@@ -25,13 +27,23 @@ export function AppBar() {
   };
 
   const onImport = async (file: File) => {
-    const events = parseBackup(await file.text());
+    let events: ReturnType<typeof parseBackup>;
+    try {
+      events = parseBackup(await file.text());
+    } catch {
+      showToast(he.importBad);
+      return;
+    }
     if (!events) {
       showToast(he.importBad);
       return;
     }
-    const count = await importUserEvents(events);
-    showToast(count > 0 ? he.importOk(count) : he.importNone);
+    try {
+      const count = await importUserEvents(events);
+      showToast(count > 0 ? he.importOk(count) : he.importNone);
+    } catch {
+      showToast(he.saveFailed);
+    }
   };
 
   return (
@@ -48,21 +60,35 @@ export function AppBar() {
           {he.navAdd}
         </Link>
       </nav>
-      <Popover.Root>
-        <Popover.Trigger className="text-btn bar-end" aria-label={he.menuLabel}>
-          ⋯
-        </Popover.Trigger>
-        <Popover.Portal>
-          <Popover.Content className="popover menu-popover" align="end" sideOffset={6}>
-            <button type="button" className="menu-item" onClick={onExport}>
-              {he.exportJson}
+      <div className="bar-tools">
+        {session.configured ? (
+          <>
+            {session.email ? (
+              <span className="user-email" title={session.email}>
+                {session.email}
+              </span>
+            ) : null}
+            <button type="button" className="text-btn" onClick={() => void session.signOut()}>
+              {he.signOut}
             </button>
-            <button type="button" className="menu-item" onClick={() => fileRef.current?.click()}>
-              {he.importJson}
-            </button>
-          </Popover.Content>
-        </Popover.Portal>
-      </Popover.Root>
+          </>
+        ) : null}
+        <Popover.Root>
+          <Popover.Trigger className="text-btn" aria-label={he.menuLabel}>
+            ⋯
+          </Popover.Trigger>
+          <Popover.Portal>
+            <Popover.Content className="popover menu-popover" align="end" sideOffset={6}>
+              <button type="button" className="menu-item" onClick={onExport}>
+                {he.exportJson}
+              </button>
+              <button type="button" className="menu-item" onClick={() => fileRef.current?.click()}>
+                {he.importJson}
+              </button>
+            </Popover.Content>
+          </Popover.Portal>
+        </Popover.Root>
+      </div>
       <input
         ref={fileRef}
         hidden

@@ -57,15 +57,21 @@ export const useCalendar = create<CalendarState>((set, get) => ({
   toast: null,
   init: () => {
     let cancel = false;
-    void eventStore.list().then((events) => {
-      if (!cancel) set({ userEvents: events, ready: true });
-    });
+    void eventStore.list().then(
+      (events) => {
+        if (!cancel) set({ userEvents: events, ready: true });
+      },
+      () => {
+        if (!cancel) set({ ready: true });
+      },
+    );
     const unsubscribe = eventStore.subscribe((events) => {
       if (!cancel) set({ userEvents: events, ready: true });
     });
     return () => {
       cancel = true;
       unsubscribe();
+      set({ userEvents: [], ready: false });
     };
   },
   setFilters: (filters) => {

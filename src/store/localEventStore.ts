@@ -5,7 +5,7 @@ import type { EventStore } from './eventStore.ts';
 
 /**
  * IndexedDB via idb-keyval, with an in-memory fallback when storage is unavailable.
- * A later SupabaseEventStore can implement EventStore without UI changes.
+ * Used when Supabase is not configured.
  */
 export function createLocalEventStore(): EventStore {
   let events: CalendarEvent[] = [];

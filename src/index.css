@@ -221,6 +221,11 @@ button {
   background: var(--navy-press);
 }
 
+.primary-btn:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
 .pill-slot {
   position: relative;
   min-width: 0;
@@ -773,7 +778,8 @@ button {
 @media (max-width: 767px) {
   .brand p,
   .month .primary-btn,
-  .year-rail {
+  .year-rail,
+  .user-email {
     display: none;
   }
 
@@ -840,8 +846,70 @@ button {
   }
 }
 
-.bar-end {
+.bar-tools {
   margin-inline-start: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.user-email {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.gate {
+  box-sizing: border-box;
+  min-height: 100%;
+  display: flex;
+  padding: 24px;
+  overflow: auto;
+  background: var(--bg);
+}
+
+.gate-card {
+  width: min(420px, 100%);
+  margin: auto;
+  box-sizing: border-box;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.gate-card h1 {
+  margin: 0 0 8px;
+  color: var(--navy);
+  font-size: 28px;
+}
+
+.gate-lead,
+.gate-help {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.gate-help {
+  margin: 16px 0 0;
+}
+
+.gate-card .primary-btn {
+  width: 100%;
+  height: 40px;
+  justify-content: center;
+}
+
+.gate-status {
+  margin: auto;
+  color: var(--muted);
 }
 
 .menu-popover {

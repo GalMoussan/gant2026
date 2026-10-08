@@ -196,7 +196,9 @@ export function CalendarPage() {
 
   const onDelete = useCallback(
     (id: string) => {
-      void removeUserEvents([id]).then(() => showToast(he.toastDeleted));
+      void removeUserEvents([id])
+        .then(() => showToast(he.toastDeleted))
+        .catch(() => showToast(he.saveFailed));
     },
     [removeUserEvents, showToast],
   );
