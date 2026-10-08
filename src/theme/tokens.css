@@ -1,0 +1,23 @@
+:root {
+  --app-bar-height: 56px;
+  --navy: #1f4e78;
+  --navy-hover: #173e60;
+  --navy-press: #12324e;
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --milestone-bg: #fff2cc;
+  --milestone-text: #7a5b00;
+  --weekday: #d6dce4;
+  --holiday: #bfbfbf;
+  --chip-text: #1f2937;
+  --radius: 8px;
+  --radius-chip: 6px;
+  --shadow-float: 0 12px 32px rgba(31, 41, 55, 0.14);
+  --fri-sat: 0.55fr;
+  --day-cols: 1fr 1fr 1fr 1fr 1fr var(--fri-sat) var(--fri-sat);
+  --font: 'Heebo Variable', 'Heebo', sans-serif;
+  --danger: #9f1239;
+}
