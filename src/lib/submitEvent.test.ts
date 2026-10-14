@@ -16,6 +16,23 @@ describe('planSubmission', () => {
     expect(plan.removeIds).toEqual([]);
     expect(plan.upserts).toHaveLength(1);
     expect(plan.upserts[0]).toMatchObject({ title: 'הרצאה', date: '2026-12-15', source: 'user', allDay: true });
+    expect(plan.upserts[0]?.startTime).toBeUndefined();
+    expect(plan.upserts[0]?.endTime).toBeUndefined();
+  });
+
+  it('stores a start and end time when the event is not all day', () => {
+    const draft = emptyDraft('2026-12-15');
+    draft.title = 'סדנה';
+    draft.allDay = false;
+    draft.startTime = '17:00';
+    draft.endTime = '19:15';
+    const plan = planSubmission(draft, null, [], ids(), '2026-10-08T00:00:00.000Z');
+    expect(plan.upserts[0]).toMatchObject({
+      title: 'סדנה',
+      allDay: false,
+      startTime: '17:00',
+      endTime: '19:15',
+    });
   });
 
   it('repeats weekly through the until date', () => {

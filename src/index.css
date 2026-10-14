@@ -471,6 +471,24 @@ button {
   color: var(--chip-text);
 }
 
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chip-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip-time {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
 .chip.is-comfortable,
 .more-btn {
   height: 22px;

@@ -46,14 +46,18 @@ export function EventChip({ event, density, dimmed, pulse, onDelete }: EventChip
               animate={pulse && !reduce ? { boxShadow: ['0 0 0 0 rgba(31,78,120,0.5)', '0 0 0 6px rgba(31,78,120,0)'] } : { boxShadow: '0 0 0 0 rgba(31,78,120,0)' }}
               transition={pulse && !reduce ? { duration: 0.7, repeat: 2, ease: 'easeOut' } : { duration: 0 }}
             >
-              {starred ? '★ ' : ''}
-              {event.title}
+              <span className="chip-title">
+                {starred ? '★ ' : ''}
+                {event.title}
+              </span>
+              {event.startTime && event.endTime ? <span className="chip-time">{he.timeRange(event.startTime, event.endTime)}</span> : null}
             </motion.button>
           </Popover.Trigger>
         </Tooltip.Trigger>
         <Tooltip.Portal>
           <Tooltip.Content className="tooltip" side="top">
             <p className="m-0 font-semibold">{event.title}</p>
+            {event.startTime && event.endTime ? <p className="m-0">{he.timeRange(event.startTime, event.endTime)}</p> : null}
             {hours ? <p className="m-0">{hours}</p> : null}
           </Tooltip.Content>
         </Tooltip.Portal>

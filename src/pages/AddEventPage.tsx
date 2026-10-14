@@ -294,14 +294,26 @@ export function AddEventPage() {
               {ERROR_TEXT.endDate}
             </p>
           ) : null}
-          <Switch
-            label={he.fieldAllDay}
-            pressed={draft.kind === 'holiday' || draft.allDay}
-            onClick={() => {
-              if (draft.kind === 'holiday') return;
-              patch({ allDay: !draft.allDay });
-            }}
-          />
+          {draft.kind !== 'holiday' ? (
+            <div className="field">
+              <span className="field-label" id="time-mode-label">
+                {he.fieldTime}
+              </span>
+              <ToggleGroup.Root
+                className="kind-group"
+                type="single"
+                value={draft.allDay ? 'day' : 'timed'}
+                aria-labelledby="time-mode-label"
+                onValueChange={(value) => {
+                  if (value !== 'day' && value !== 'timed') return;
+                  patch({ allDay: value === 'day' });
+                }}
+              >
+                <ToggleGroup.Item value="day">{he.fieldAllDay}</ToggleGroup.Item>
+                <ToggleGroup.Item value="timed">{he.fieldTimed}</ToggleGroup.Item>
+              </ToggleGroup.Root>
+            </div>
+          ) : null}
           {draft.kind !== 'holiday' && !draft.allDay ? (
             <div className="time-row">
               <label className="field">

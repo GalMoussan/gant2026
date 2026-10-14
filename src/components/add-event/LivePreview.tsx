@@ -58,6 +58,7 @@ export function LivePreview({ draft, events, onPick }: LivePreviewProps) {
           {events.map((event) => (
             <li key={event.id} className="py-1">
               {event.title}
+              {event.startTime && event.endTime ? <span className="text-muted"> {he.timeRange(event.startTime, event.endTime)}</span> : null}
             </li>
           ))}
         </ul>
