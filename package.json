@@ -9,6 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "import": "tsx scripts/import-excel.ts",
+    "import:sql": "tsx scripts/seed-to-sql.ts",
+    "import:all": "npm run import && npm run import:sql",
     "test": "vitest run",
     "test:e2e": "playwright test"
   },
